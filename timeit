@@ -1,0 +1,39 @@
+#!/bin/bash
+
+if [ -z "$2" ]; then
+    exit
+fi
+
+SCALE=2
+
+TIMES=$1
+shift
+
+COMMAND=$@
+
+REAL_TOTAL="0"
+USER_TOTAL="0"
+SYST_TOTAL="0"
+
+for i in `seq 1 $TIMES`; do
+
+    DATA=`/usr/bin/time bash -c "$COMMAND &> /dev/null" 2>&1`
+
+    REAL=`echo $DATA | awk '{ print $1 }'`
+    USER=`echo $DATA | awk '{ print $3 }'`
+    SYST=`echo $DATA | awk '{ print $5 }'`
+
+    REAL_TOTAL=`echo "scale = $SCALE; $REAL_TOTAL + $REAL" | bc`
+    USER_TOTAL=`echo "scale = $SCALE; $USER_TOTAL + $USER" | bc`
+    SYST_TOTAL=`echo "scale = $SCALE; $SYST_TOTAL + $SYST" | bc`
+
+done
+
+REAL_AVG=`echo "scale = $SCALE; $REAL_TOTAL / $TIMES" | bc`
+USER_AVG=`echo "scale = $SCALE; $USER_TOTAL / $TIMES" | bc`
+SYST_AVG=`echo "scale = $SCALE; $SYST_TOTAL / $TIMES" | bc`
+
+echo -e "REAL\tAVG\tSYS\tTIMES\tCOMMAND"
+echo -e "\
+$REAL_AVG\t$USER_AVG\t$SYST_AVG\
+\t$TIMES\t$COMMAND"
