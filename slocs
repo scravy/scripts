@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cat -b $* | sort -u | wc -l

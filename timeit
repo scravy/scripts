@@ -33,7 +33,7 @@ REAL_AVG=`echo "scale = $SCALE; $REAL_TOTAL / $TIMES" | bc`
 USER_AVG=`echo "scale = $SCALE; $USER_TOTAL / $TIMES" | bc`
 SYST_AVG=`echo "scale = $SCALE; $SYST_TOTAL / $TIMES" | bc`
 
-echo -e "REAL\tAVG\tSYS\tTIMES\tCOMMAND"
+echo -e "REAL\tAVG\tSYS\tTIMES\tCOMMAND" > /dev/stderr
 echo -e "\
 $REAL_AVG\t$USER_AVG\t$SYST_AVG\
-\t$TIMES\t$COMMAND"
+\t$TIMES\t$COMMAND" > /dev/stderr
